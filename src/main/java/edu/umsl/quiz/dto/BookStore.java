@@ -41,6 +41,9 @@ public class BookStore {
 //    public void setBook(Book book) {
 //        this.book = book;
 //    }
+public BookStore(){
+
+}
 	
 	public BookStore(String name, String address, String phone, String website){
 		this.name=name;

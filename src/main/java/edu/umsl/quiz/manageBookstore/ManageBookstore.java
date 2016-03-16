@@ -1,7 +1,6 @@
 package edu.umsl.quiz.manageBookstore;
 
-import java.util.Scanner;
-
+import edu.umsl.quiz.dto.BookStore;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,7 +9,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import edu.umsl.quiz.dto.BookStore;
+import java.util.Scanner;
 
 
 
@@ -53,6 +52,31 @@ public static void main(String[] args){
 
 		
 		long bookStoreID = addBookStore(name, address, phone, website);
+		System.out.println("Bookstore id = "+ bookStoreID);
+
+		BookStore bookStore = getBookStore(bookStoreID);
+	    System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getId());
+		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
+	    System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
+		System.out.println("Bookstore["+bookStoreID+"] phone ="+bookStore.getPhone());
+		System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());
+
+		bookStore.setName("Hello");
+		updateBookStore(bookStore);
+		bookStore = getBookStore(bookStoreID);
+		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getId());
+		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
+		System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
+		System.out.println("Bookstore["+bookStoreID+"] phone ="+bookStore.getPhone());
+		System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());
+
+		deleteBookStore(bookStore);
+		bookStore = getBookStore(bookStoreID);
+		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getId());
+		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
+		System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
+		System.out.println("Bookstore["+bookStoreID+"] phone ="+bookStore.getPhone());
+		System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());
 	     
 	}
 
@@ -73,5 +97,59 @@ public static long addBookStore(String name, String address, String phone, Strin
     }
     return bookStoreID;
  }
+
+	public static BookStore getBookStore(long id){
+		Session session = factory.openSession();
+		Transaction tx = null;
+		BookStore bookStore = null;
+		long bookStoreID = 0;
+		try{
+			tx = session.beginTransaction();
+			bookStore = (BookStore)session.get(BookStore.class, id);
+			tx.commit();
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+		return bookStore;
+	}
+
+	public static void updateBookStore(BookStore bookStore){
+		Session session = factory.openSession();
+		Transaction tx = null;
+
+
+		try{
+			tx = session.beginTransaction();
+			session.update(bookStore);
+			tx.commit();
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+
+	}
+
+	public static void deleteBookStore(BookStore bookStore){
+		Session session = factory.openSession();
+		Transaction tx = null;
+
+
+		try{
+			tx = session.beginTransaction();
+			session.delete(bookStore);
+			tx.commit();
+		}catch (HibernateException e) {
+			if (tx!=null) tx.rollback();
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+
+	}
 
 }
