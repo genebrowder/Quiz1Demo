@@ -228,7 +228,12 @@ public static long addBookStore(String name, String address, String phone, Strin
                 System.out.println("Bookstore["+bookStore.getId()+"] address ="+bookStore.getAddress());
                 System.out.println("Bookstore["+bookStore.getId()+"] phone ="+bookStore.getPhone());
                 System.out.println("Bookstore["+bookStore.getId()+"] website ="+bookStore.getWebsite());
-                System.out.println() ;
+
+//                System.out.println("name ="+bookStore.getName());
+//                System.out.println("address ="+bookStore.getAddress());
+//                System.out.println("phone ="+bookStore.getPhone());
+//                System.out.println("website ="+bookStore.getWebsite());
+//                System.out.println() ;
             }
 
 

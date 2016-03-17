@@ -17,7 +17,7 @@ public class BookStore {
     
 	private static final long serialVersionUID = 336542947443965225L;
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name="BOOKSTORE_ID")
 	@Id
 	private long id;
 	
