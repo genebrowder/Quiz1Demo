@@ -30,12 +30,26 @@
     </bytecodeTargetLevel>
   </component>
   <component name="CopyrightManager" default="" />
-  <component name="DataSourceManagerImpl" format="xml" hash="3794757740">
+  <component name="DataSourceManagerImpl" format="xml" hash="3416914623">
     <data-source source="LOCAL" name="HSQLDB (Local) - hibernatetutorial" uuid="e320bdd8-2440-40c5-929b-e0be8da45028">
       <driver-ref>hsqldb.local</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.hsqldb.jdbc.JDBCDriver</jdbc-driver>
       <jdbc-url>jdbc:hsqldb:mem:hibernatetutorial</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="MySQL - @localhost" uuid="ea0e5120-eb5e-4833-b217-8ff435d324c5">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
+      <driver-properties>
+        <property name="autoReconnect" value="true" />
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+        <property name="characterEncoding" value="utf8" />
+        <property name="characterSetResults" value="utf8" />
+        <property name="yearIsDateType" value="false" />
+      </driver-properties>
     </data-source>
   </component>
   <component name="Encoding">
@@ -217,6 +231,12 @@
     <data-source name="HSQLDB (Local) - hibernatetutorial" uuid="e320bdd8-2440-40c5-929b-e0be8da45028">
       <secret-storage>master_key</secret-storage>
       <auth-required>false</auth-required>
+    </data-source>
+    <data-source name="MySQL - @localhost" uuid="ea0e5120-eb5e-4833-b217-8ff435d324c5">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>Quiz1.*</schema-pattern>
+      <default-schemas>Quiz1.*</default-schemas>
     </data-source>
   </component>
   <component name="libraryTable">

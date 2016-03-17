@@ -1,16 +1,12 @@
 package edu.umsl.quiz.manageBookstore;
 
 import edu.umsl.quiz.dto.BookStore;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import java.util.Scanner;
-
+import java.util.*;
 
 
 public class ManageBookstore {
@@ -18,25 +14,48 @@ public class ManageBookstore {
 	private static SessionFactory factory;
 	
 public static void main(String[] args){
-		
-		//Read data from file or take data from input
+
+        LinkedHashSet <BookStore> bookStoreSet = new LinkedHashSet<>();
+
+        int choice=0;
+
+        while(choice != 99)  {
+
+
+		BookStore bookStore = new BookStore();
+
+        //Read data from file or take data from input
 		System.out.println("What is the name of the store?");
 	    Scanner sc = new Scanner(System.in);
 	    String name = sc.next();
+        bookStore.setName(name);
 	    
 	    System.out.println("What is the address of the store?");
 	    sc = new Scanner(System.in);
 	    String address = sc.next();
+        bookStore.setAddress(address);
 	    
 	    System.out.println("What is the phone number of the store?");
 	    sc = new Scanner(System.in);
 	    String phone = sc.next();
+        bookStore.setPhone(phone);
 	    
 	    System.out.println("What is the website of the store?");
 	    sc = new Scanner(System.in);
-	    String website = sc.next();
-	    
+	    String webSite = sc.next();
+        bookStore.setWebsite(webSite);
 
+        bookStoreSet.add(bookStore);
+
+        System.out.println("What you like to enter another book store? (Y or N):");
+        sc = new Scanner(System.in);
+        String decision = sc.next();
+        if(decision.equals("N") || decision.equals("n")) {
+            choice=99;
+        }
+
+
+        }
 	    //Hibernate Code
 		
 		Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
@@ -50,11 +69,16 @@ public static void main(String[] args){
 		
 		//Hibernate Code
 
-		
-		long bookStoreID = addBookStore(name, address, phone, website);
-		System.out.println("Bookstore id = "+ bookStoreID);
+        showAllBookStores();
 
-		BookStore bookStore = getBookStore(bookStoreID);
+        //long bookStoreID = addBookStore(name, address, phone, website);
+		//System.out.println("Bookstore id = "+ bookStoreID);
+
+        bookStoreSet = addBookStore(bookStoreSet) ;
+
+        showAllBookStores();
+
+		/*BookStore bookStore = getBookStore(bookStoreID);
 	    System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getId());
 		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
 	    System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
@@ -76,7 +100,7 @@ public static void main(String[] args){
 		System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
 		System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
 		System.out.println("Bookstore["+bookStoreID+"] phone ="+bookStore.getPhone());
-		System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());
+		System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());   */
 	     
 	}
 
@@ -87,7 +111,12 @@ public static long addBookStore(String name, String address, String phone, Strin
     try{
        tx = session.beginTransaction();
        BookStore bookStore = new BookStore(name, address, phone, website);
-       bookStoreID = (long)session.save(bookStore); 
+       bookStoreID = (long)session.save(bookStore);
+        System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
+        System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
+        System.out.println("Bookstore["+bookStoreID+"] phone ="+bookStore.getPhone());
+        System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());
+        System.out.println() ;
        tx.commit();
     }catch (HibernateException e) {
        if (tx!=null) tx.rollback();
@@ -97,6 +126,35 @@ public static long addBookStore(String name, String address, String phone, Strin
     }
     return bookStoreID;
  }
+    public static long addBookStore(BookStore bookStore){
+        Session session = factory.openSession();
+        Transaction tx = null;
+        long bookStoreID = 0;
+        try{
+            tx = session.beginTransaction();
+            bookStoreID = (long)session.save(bookStore);
+            System.out.println("Bookstore["+bookStoreID+"] name ="+bookStore.getName());
+            System.out.println("Bookstore["+bookStoreID+"] address ="+bookStore.getAddress());
+            System.out.println("Bookstore["+bookStoreID+"] phone ="+bookStore.getPhone());
+            System.out.println("Bookstore["+bookStoreID+"] website ="+bookStore.getWebsite());
+            System.out.println() ;
+            tx.commit();
+        }catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+        return bookStoreID;
+    }
+    public static LinkedHashSet<BookStore>  addBookStore(LinkedHashSet<BookStore> bookStoreSet){
+
+        for(BookStore bookStore: bookStoreSet) {
+            long bookStoreID = (long) addBookStore(bookStore);
+            bookStore.setId(bookStoreID);
+        }
+        return bookStoreSet;
+    }
 
 	public static BookStore getBookStore(long id){
 		Session session = factory.openSession();
@@ -152,4 +210,36 @@ public static long addBookStore(String name, String address, String phone, Strin
 
 	}
 
+    public static List showAllBookStores(){
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        List allBookStores = new ArrayList();;
+        try{
+            tx = session.beginTransaction();
+
+            Query queryResult = session.createQuery("from BookStore");
+
+
+            allBookStores = queryResult.list();
+            for (int i = 0; i < allBookStores.size(); i++) {
+                BookStore bookStore = (BookStore) allBookStores.get(i);
+                System.out.println("Bookstore["+bookStore.getId()+"] name ="+bookStore.getName());
+                System.out.println("Bookstore["+bookStore.getId()+"] address ="+bookStore.getAddress());
+                System.out.println("Bookstore["+bookStore.getId()+"] phone ="+bookStore.getPhone());
+                System.out.println("Bookstore["+bookStore.getId()+"] website ="+bookStore.getWebsite());
+                System.out.println() ;
+            }
+
+
+            tx.commit();
+        }catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
+        return allBookStores;
+    }
 }
